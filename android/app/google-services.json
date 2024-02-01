@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "173268327760",
+    "project_id": "corona-d3062",
+    "storage_bucket": "corona-d3062.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173268327760:android:2dc5f632bc4fb74f61e055",
+        "android_client_info": {
+          "package_name": "com.example.myapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiImfjC2GgvotNNieeH_Hk6ZA1n0Y7Ts0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
