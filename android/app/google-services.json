@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "173268327760",
-    "project_id": "corona-d3062",
-    "storage_bucket": "corona-d3062.appspot.com"
+    "project_number": "519520270059",
+    "project_id": "workshop-9b100",
+    "storage_bucket": "workshop-9b100.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:173268327760:android:2dc5f632bc4fb74f61e055",
+        "mobilesdk_app_id": "1:519520270059:android:b7dc07cab8b1dec79670ae",
         "android_client_info": {
           "package_name": "com.example.myapp"
         }
@@ -15,7 +15,45 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBiImfjC2GgvotNNieeH_Hk6ZA1n0Y7Ts0"
+          "current_key": "AIzaSyBfMsBt9iaL_76bpB2_E-6Jf-PGZ2OfHVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519520270059:android:2c63277fcbac11f59670ae",
+        "android_client_info": {
+          "package_name": "com.example.prjt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfMsBt9iaL_76bpB2_E-6Jf-PGZ2OfHVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519520270059:android:33c55e9dac5665c09670ae",
+        "android_client_info": {
+          "package_name": "ma.fstt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfMsBt9iaL_76bpB2_E-6Jf-PGZ2OfHVc"
         }
       ],
       "services": {

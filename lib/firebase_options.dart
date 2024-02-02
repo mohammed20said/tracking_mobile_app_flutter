@@ -2,7 +2,6 @@
 // ignore_for_file: lines_longer_than_80_chars, avoid_classes_with_only_static_members
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
-
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
@@ -45,38 +44,37 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyB96GWayylvZujOSDsLjaZ8EyCrunPaNU4',
-    appId: '1:173268327760:web:d0ba2f53149512a361e055',
-    messagingSenderId: '173268327760',
-    projectId: 'corona-d3062',
-    authDomain: 'corona-d3062.firebaseapp.com',
-    storageBucket: 'corona-d3062.appspot.com',
-    measurementId: 'G-KF0DKY3ZF0',
+    apiKey: 'AIzaSyCn7ueQtQ-8tMHFIBSsTRHb4Hfm3SUvcvA',
+    appId: '1:519520270059:web:0e4c1509815257609670ae',
+    messagingSenderId: '519520270059',
+    projectId: 'workshop-9b100',
+    authDomain: 'workshop-9b100.firebaseapp.com',
+    storageBucket: 'workshop-9b100.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBiImfjC2GgvotNNieeH_Hk6ZA1n0Y7Ts0',
-    appId: '1:173268327760:android:2dc5f632bc4fb74f61e055',
-    messagingSenderId: '173268327760',
-    projectId: 'corona-d3062',
-    storageBucket: 'corona-d3062.appspot.com',
+    apiKey: 'AIzaSyBfMsBt9iaL_76bpB2_E-6Jf-PGZ2OfHVc',
+    appId: '1:519520270059:android:b7dc07cab8b1dec79670ae',
+    messagingSenderId: '519520270059',
+    projectId: 'workshop-9b100',
+    storageBucket: 'workshop-9b100.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBcEH1dCjP_CkyJV1bdj5ZGHJYKIsbSDuU',
-    appId: '1:173268327760:ios:df64e273d383b0e061e055',
-    messagingSenderId: '173268327760',
-    projectId: 'corona-d3062',
-    storageBucket: 'corona-d3062.appspot.com',
+    apiKey: 'AIzaSyBY5wcCR0G-FEqjqyr-yuiU50hSEbtH-nw',
+    appId: '1:519520270059:ios:006819df0685ff099670ae',
+    messagingSenderId: '519520270059',
+    projectId: 'workshop-9b100',
+    storageBucket: 'workshop-9b100.appspot.com',
     iosBundleId: 'com.example.myapp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBcEH1dCjP_CkyJV1bdj5ZGHJYKIsbSDuU',
-    appId: '1:173268327760:ios:3a443a47c3f9611861e055',
-    messagingSenderId: '173268327760',
-    projectId: 'corona-d3062',
-    storageBucket: 'corona-d3062.appspot.com',
+    apiKey: 'AIzaSyBY5wcCR0G-FEqjqyr-yuiU50hSEbtH-nw',
+    appId: '1:519520270059:ios:eedbea4c59eba1cd9670ae',
+    messagingSenderId: '519520270059',
+    projectId: 'workshop-9b100',
+    storageBucket: 'workshop-9b100.appspot.com',
     iosBundleId: 'com.example.myapp.RunnerTests',
   );
 }

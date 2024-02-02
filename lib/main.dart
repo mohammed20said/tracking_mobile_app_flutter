@@ -8,8 +8,12 @@ import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
-import 'package:connectivity_plus/connectivity_plus.dart';import 'package:firebase_core/firebase_core.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'dart:developer';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 
 
 Future<void> main() async {
@@ -19,7 +23,22 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+
+  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+  await _fcm.requestPermission(
+    alert: true,
+    announcement: true,
+    badge: true,
+    carPlay: true,
+    criticalAlert: true,
+    provisional: true,
+    sound: true,
+  );
+
+  // Run the app
+  runApp(MaterialApp(
+    home: MyApp(),
+  ));
 }
 
 
@@ -42,15 +61,93 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   }
 }
 
-class MyApp extends StatelessWidget {
+
+
+
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+
+
+}
+
+class _MyAppState extends State<MyApp> {
+  Future<void> _sendTokenToServer(String deviceToken) async {
+    // Send the device token to your server
+    // Replace 'https://your_server_url' with your actual server endpoint
+    Uri serverUrl = Uri.parse('http://192.168.137.209:8080/api/notifications');
+    await http.get(
+      Uri.parse('$serverUrl?token=$deviceToken'),
+      headers: {'Content-Type': 'application/json'},
+    );
+  }
+
+
+  Future<void> _configureFirebase() async {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      // Handle the incoming message when the app is in the foreground
+
+      if (message.notification != null) {
+        // If you want to show a dialog
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: Text(message.notification!.title ?? "No Title"),
+            content: Text(message.notification!.body ?? "No body"),
+          ),
+        );
+
+        FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+
+        });
+
+        FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+
+        });
+
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      // Handle the incoming message when the app is opened from a terminated state
+
+    });
+  }
+
+
+  // this method will give you the token
+  Future<void> _getToken() async {
+    final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+    final deviceToken = await _fcm.getToken();
+    log("token = " + deviceToken.toString());
+
+    // Send the token to your server
+    // await _sendTokenToServer(deviceToken!);
+
+    // Configure Firebase messaging
+    await _configureFirebase();
+  }
   @override
   Widget build(BuildContext context) {
+    _getToken();
     return MaterialApp(
       onGenerateRoute: generateRoute,
       initialRoute: '/',
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
 
 class Home extends StatelessWidget {
   @override
@@ -97,7 +194,7 @@ class Home extends StatelessWidget {
         MaterialPageRoute(builder: (context) => LocalDataScreen()),
         );
         },
-        child: Text('View Local Data'),
+        child: Text('declare sickness'),
         ),
         ],
       ),
@@ -132,22 +229,69 @@ class _LocalDataScreenState extends State<LocalDataScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Local Data'),
+        title: Text('declare sickness'),
       ),
-      body: ListView.builder(
-        itemCount: storedData.length,
-        itemBuilder: (context, index) {
-          final Map<String, dynamic> data = jsonDecode(storedData[index]);
-          return ListTile(
-
-            title: Text('connected device UDID: ${data['number2']}'),
-            subtitle: Text('date/time: ${data['timestamp']}'),
-            // Add more fields as needed
-          );
-        },
+      body: Column(
+        children: [
+          // Your existing code...
+          ElevatedButton(
+            onPressed: () {
+              // Call a function to declare "I'm sick"
+              declareSickness();
+            },
+            child: Text("I'm Sick"),
+          ),
+        ],
       ),
     );
   }
+
+  // Function to handle the "I'm sick" button press
+  void declareSickness() {
+    // Retrieve local data and send it to the Spring Boot server
+    sendLocalDataToServer();
+  }// Function to send local data to the Spring Boot server
+  Future<void> sendToServer(List<String> data) async {
+    final url = 'http://192.168.137.209:8080/api/contact'; // Replace with your actual server API endpoint
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode == 200) {
+      print('UDIDs sent successfully');
+    } else {
+      print('Failed to send UDIDs. Status code: ${response.statusCode}');
+    }
+  }
+  Future<void> sendLocalDataToServer() async {
+    // Retrieve local data from SharedPreferences
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final List<String> storedData = prefs.getStringList('storedData') ?? [];
+
+    // Iterate through local data and send each entry to the server
+   // for (String jsonData in storedData) {
+     // final Map<String, dynamic> data = jsonDecode(jsonData);
+    print('-----------------------');
+     print(storedData);
+      await sendToServer(storedData);
+    //}
+
+    // Clear local data after sending to the server
+
+
+    showToast(
+      "Local data sent to the server",
+      context: context,
+      axis: Axis.horizontal,
+      alignment: Alignment.center,
+      position: StyledToastPosition.bottom,
+    );
+  }
+
+
 }
 
 class DevicesListScreen extends StatefulWidget {
@@ -399,53 +543,53 @@ class _DevicesListScreenState extends State<DevicesListScreen> {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final List<String> storedData = prefs.getStringList('storedData') ?? [];
 
-      // Add the new data to the list
-      storedData.add(jsonEncode(data));
+      // Check if the UDID already exists in the storedData
+      int index = storedData.indexWhere((element) {
+        final Map<String, dynamic> storedDataMap = jsonDecode(element);
+        return storedDataMap['token'] == data['token'];
+      });
+
+      // If UDID exists, update the timestamp
+      if (index != -1) {
+        storedData[index] = jsonEncode({
+          'timestamp': data['timestamp'],
+          'token' : data['token']
+        });
+      } else {
+        // If UDID doesn't exist, add the new data
+        storedData.add(jsonEncode(data));
+      }
 
       // Save the updated list
       await prefs.setStringList('storedData', storedData);
     }
 
 
-    Future<void> sendToServer(Map<String, dynamic> data) async {
-      final url = 'http://192.168.137.249:8080/api/saveNumber'; // Replace with your actual server API endpoint
 
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(data),
-      );
 
-      if (response.statusCode == 200) {
-        print('UDIDs sent successfully');
-      } else {
-        print('Failed to send UDIDs. Status code: ${response.statusCode}');
-      }
-    }
-
-    Future<void> sendUDIDsToServer(String currentDeviceUDID, String connectedDeviceUDID) async {
+    Future<void> sendUDIDsToServer(String currentDeviceUDID,String token) async {
       final DateTime currentTime = DateTime.now();
 
+
       final Map<String, dynamic> dataToSend = {
-        'number1': currentDeviceUDID,
-        'number2': connectedDeviceUDID,
         'timestamp': currentTime.toIso8601String(),
+        'token': token,
       };
 
 
 
-      // Store the data locally
 
 
-      // Check for internet connection
-      if (await isInternetAvailable()) {
+      await storeLocalData(dataToSend);
 
-        await sendToServer(dataToSend);
-      } else {
-        print('No internet connection. Data stored locally.');
-        await storeLocalData(dataToSend);
-
-      }
+      // if (await isInternetAvailable()) {
+      //
+      //   await sendToServer(dataToSend);
+      // } else {
+      //   print('No internet connection. Data stored locally.');
+      //   await storeLocalData(dataToSend);
+      //
+      // }
     }
     await nearbyService.init(
       serviceType: 'mpconn',
@@ -486,9 +630,14 @@ class _DevicesListScreenState extends State<DevicesListScreen> {
           connectedDeviceUDID = await generateUDID();
 
           // Send the UDID to the connected device
+          final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+          final String? deviceToken = await _fcm.getToken();
           nearbyService.sendMessage(
             connectedDevice!.deviceId,
-            connectedDeviceUDID,
+            deviceToken!
+
+            ,
+
           );
         }
       });
@@ -517,7 +666,7 @@ class _DevicesListScreenState extends State<DevicesListScreen> {
 
 
           showToast(
-            jsonEncode(data['message']),
+            jsonEncode(data),
             context: context,
             axis: Axis.horizontal,
             alignment: Alignment.center,
